@@ -22,7 +22,9 @@ docker compose up -d
 # puis http://localhost:8080
 ```
 
-Mise à jour vers la dernière release : `docker compose pull && docker compose up -d`.
+L'image (amd64 et arm64) est construite automatiquement par GitHub Actions à chaque push sur `main` (tag `latest`) et à chaque tag `vX.Y.Z` (tag de version).
+
+Mise à jour vers la dernière version : `docker compose pull && docker compose up -d`.
 Pour figer une version, remplacez `:latest` par le tag voulu (ex. `:v0.1.0`).
 
 Pour construire l'image vous-même depuis les sources : `docker compose up -d --build`.
