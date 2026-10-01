@@ -13,18 +13,24 @@ Rien n'est enregistré côté serveur : on importe et exporte des fichiers `.txt
 - **Fichiers** : import / export `.txt` UTF-8, copie, conversion des cadres Unicode en ASCII pur.
 - Le brouillon est conservé dans le navigateur (`localStorage`), jamais envoyé au serveur ; désactivable dans les réglages.
 
-## Déploiement avec Docker
+## Déploiement avec Docker Compose
+
+Il suffit du fichier [`compose.yaml`](compose.yaml) : l'image est téléchargée depuis GitHub Container Registry.
 
 ```bash
-docker compose up -d --build
+docker compose up -d
 # puis http://localhost:8080
 ```
 
-Ou sans Compose :
+Mise à jour vers la dernière release : `docker compose pull && docker compose up -d`.
+Pour figer une version, remplacez `:latest` par le tag voulu (ex. `:v0.1.0`).
+
+Pour construire l'image vous-même depuis les sources : `docker compose up -d --build`.
+
+Sans Compose :
 
 ```bash
-docker build -t rawnote .
-docker run -d -p 8080:8080 --read-only --tmpfs /tmp rawnote
+docker run -d -p 8080:8080 --read-only --tmpfs /tmp ghcr.io/yogui26/rawnote:latest
 ```
 
 L'image repose sur `nginx-unprivileged` (port 8080, utilisateur non root) avec une politique CSP stricte.

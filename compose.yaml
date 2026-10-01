@@ -1,7 +1,8 @@
 services:
   rawnote:
+    # Image publiée par la CI à chaque release ; `docker compose up -d --build` la reconstruit localement.
+    image: ghcr.io/yogui26/rawnote:latest
     build: .
-    image: rawnote:latest
     container_name: rawnote
     ports:
       - "8080:8080"
