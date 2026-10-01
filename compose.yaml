@@ -1,8 +1,8 @@
 services:
   rawnote:
-    # Image publiée par la CI à chaque release ; `docker compose up -d --build` la reconstruit localement.
+    # Image construite et publiée par GitHub Actions (push sur main et tags vX.Y.Z).
     image: ghcr.io/yogui26/rawnote:latest
-    build: .
+    pull_policy: always
     container_name: rawnote
     ports:
       - "8080:8080"

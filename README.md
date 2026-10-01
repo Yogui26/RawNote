@@ -27,7 +27,7 @@ L'image (amd64 et arm64) est construite automatiquement par GitHub Actions à ch
 Mise à jour vers la dernière version : `docker compose pull && docker compose up -d`.
 Pour figer une version, remplacez `:latest` par le tag voulu (ex. `:v0.1.0`).
 
-Pour construire l'image vous-même depuis les sources : `docker compose up -d --build`.
+Pour construire l'image vous-même depuis les sources : `docker build -t rawnote .` (puis remplacez `image:` par `rawnote`).
 
 Sans Compose :
 
