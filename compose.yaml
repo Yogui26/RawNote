@@ -1,8 +1,8 @@
 services:
-  trame:
+  rawnote:
     build: .
-    image: trame:latest
-    container_name: trame
+    image: rawnote:latest
+    container_name: rawnote
     ports:
       - "8080:8080"
     restart: unless-stopped

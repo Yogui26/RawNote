@@ -1,6 +1,6 @@
 // Réglages utilisateur (stockés uniquement dans le navigateur).
 
-const KEY = 'trame:settings';
+const KEY = 'rawnote:settings';
 
 export const DEFAULTS = {
   theme: 'auto',
@@ -39,7 +39,7 @@ export function applySettings(s, editorEl) {
 
 export function loadDraft() {
   try {
-    return localStorage.getItem('trame:doc') || '';
+    return localStorage.getItem('rawnote:doc') || '';
   } catch {
     return '';
   }
@@ -50,13 +50,13 @@ export function saveDraftSoon(text) {
   clearTimeout(timer);
   timer = setTimeout(() => {
     try {
-      localStorage.setItem('trame:doc', text);
+      localStorage.setItem('rawnote:doc', text);
     } catch { /* quota dépassé ou stockage bloqué */ }
   }, 400);
 }
 
 export function clearDraft() {
   try {
-    localStorage.removeItem('trame:doc');
+    localStorage.removeItem('rawnote:doc');
   } catch { /* rien */ }
 }

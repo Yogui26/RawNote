@@ -1,4 +1,4 @@
-# Trame
+# RawNote
 
 Traitement de texte **brut** avec mise en page en caractères, façon ASCII art.
 Webapp statique (HTML/CSS/JS sans dépendance), utilisable sur ordinateur, tablette et mobile.
@@ -23,8 +23,8 @@ docker compose up -d --build
 Ou sans Compose :
 
 ```bash
-docker build -t trame .
-docker run -d -p 8080:8080 --read-only --tmpfs /tmp trame
+docker build -t rawnote .
+docker run -d -p 8080:8080 --read-only --tmpfs /tmp rawnote
 ```
 
 L'image repose sur `nginx-unprivileged` (port 8080, utilisateur non root) avec une politique CSP stricte.

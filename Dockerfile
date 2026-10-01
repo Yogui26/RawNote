@@ -1,7 +1,7 @@
 # Application 100 % statique : nginx sans privilèges, aucune donnée côté serveur.
 FROM nginxinc/nginx-unprivileged:1.27-alpine
 
-LABEL org.opencontainers.image.title="Trame" \
+LABEL org.opencontainers.image.title="RawNote" \
       org.opencontainers.image.description="Traitement de texte brut avec mise en page ASCII" \
       org.opencontainers.image.licenses="MIT"
 
