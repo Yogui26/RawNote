@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1f2328">
+  <meta name="color-scheme" content="light dark">
+  <title>Trame · texte brut mis en page</title>
+  <meta name="description" content="Éditeur de texte brut avec mise en page : alignement, listes, tableaux, dessins et logigrammes en caractères. Rien n'est envoyé au serveur.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></symbol>
+    <symbol id="i-center" viewBox="0 0 24 24"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></symbol>
+    <symbol id="i-justify" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h12"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1" fill="currentColor"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="4.5" cy="18" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-indent" viewBox="0 0 24 24"><path d="M4 5h16M12 10h8M12 14h8M4 19h16M4 9l4 3-4 3z"/></symbol>
+    <symbol id="i-outdent" viewBox="0 0 24 24"><path d="M4 5h16M12 10h8M12 14h8M4 19h16M8 9l-4 3 4 3z"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="1"/><path d="M3.5 10h17M3.5 15h17M9.5 4.5v15M15 4.5v15"/></symbol>
+    <symbol id="i-draw" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="8" height="6" rx="1"/><rect x="13" y="14" width="7.5" height="5.5" rx="2.5"/><path d="M7.5 10.5v3.5h5.5M10.5 14l2.5 0"/><path d="M11.5 7.5h6v4"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 7L4 12l5 5M4 12h10a6 6 0 0 1 6 6"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24"><path d="M15 7l5 5-5 5M20 12H10a6 6 0 0 0-6 6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  </defs>
+</svg>
+
+<div id="app">
+  <header id="topbar">
+    <h1 class="brand"><span class="brand-mark" aria-hidden="true">┌┐</span>Trame</h1>
+    <div class="spacer"></div>
+    <button class="icon-btn" data-action="undo" title="Annuler (Ctrl+Z)" aria-label="Annuler"><svg><use href="#i-undo"/></svg></button>
+    <button class="icon-btn" data-action="redo" title="Rétablir (Ctrl+Y)" aria-label="Rétablir"><svg><use href="#i-redo"/></svg></button>
+    <button class="btn" data-menu="menu-file" aria-haspopup="true" aria-expanded="false"><svg class="ic"><use href="#i-menu"/></svg><span>Fichier</span></button>
+  </header>
+
+  <div id="toolbar" role="toolbar" aria-label="Mise en page">
+    <div class="group" role="group" aria-label="Alignement">
+      <button class="tb" data-action="align" data-mode="left" title="Aligner à gauche" aria-label="Aligner à gauche"><svg><use href="#i-left"/></svg></button>
+      <button class="tb" data-action="align" data-mode="center" title="Centrer sur la ligne la plus longue" aria-label="Centrer"><svg><use href="#i-center"/></svg></button>
+      <button class="tb" data-action="align" data-mode="right" title="Aligner à droite sur la ligne la plus longue" aria-label="Aligner à droite"><svg><use href="#i-right"/></svg></button>
+      <button class="tb" data-action="align" data-mode="justify" title="Justifier sur la ligne la plus longue" aria-label="Justifier"><svg><use href="#i-justify"/></svg></button>
+    </div>
+
+    <div class="group" role="group" aria-label="Listes">
+      <button class="tb tb-text" data-menu="menu-lists" aria-haspopup="true" aria-expanded="false" title="Listes"><svg><use href="#i-list"/></svg><span class="caret">▾</span></button>
+      <button class="tb" data-action="indent" title="Augmenter le retrait (Tab)" aria-label="Augmenter le retrait"><svg><use href="#i-indent"/></svg></button>
+      <button class="tb" data-action="outdent" title="Diminuer le retrait (Maj+Tab)" aria-label="Diminuer le retrait"><svg><use href="#i-outdent"/></svg></button>
+    </div>
+
+    <div class="group" role="group" aria-label="Insertions">
+      <button class="tb tb-text" data-action="table" title="Insérer ou modifier un tableau"><svg><use href="#i-table"/></svg><span>Tableau</span></button>
+      <button class="tb tb-text" data-action="draw" title="Zone de dessin : schémas, flèches, logigrammes (sélectionnez un dessin pour le modifier)"><svg><use href="#i-draw"/></svg><span>Dessin</span></button>
+    </div>
+  </div>
+
+  <main id="editor-wrap">
+    <textarea id="editor" aria-label="Zone de texte" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" wrap="off" placeholder="Écrivez ici…&#10;&#10;Sélectionnez des lignes puis utilisez la barre d'outils pour les aligner, en faire une liste, ou insérez un tableau ou un dessin."></textarea>
+  </main>
+
+  <footer id="statusbar" aria-live="off">
+    <span id="st-pos">Ln 1, Col 1</span>
+    <span id="st-sel" hidden></span>
+    <span class="spacer"></span>
+    <span id="st-doc">1 ligne · 0 col. max</span>
+  </footer>
+</div>
+
+<!-- Menus (positionnés en JS) -->
+<div class="menu" id="menu-file" role="menu" hidden>
+  <button role="menuitem" data-action="new">Nouveau document</button>
+  <button role="menuitem" data-action="import">Importer un fichier .txt…</button>
+  <button role="menuitem" data-action="export">Exporter en .txt</button>
+  <button role="menuitem" data-action="copy">Copier (sélection ou tout)</button>
+  <hr>
+  <button role="menuitem" data-action="ascii">Convertir en ASCII pur (sélection ou tout)</button>
+  <hr>
+  <button role="menuitem" data-action="settings">Réglages…</button>
+  <button role="menuitem" data-action="help">Aide</button>
+</div>
+
+<div class="menu" id="menu-lists" role="menu" hidden>
+  <button role="menuitem" data-action="list" data-kind="bullet"><span class="mi">•</span>Puces</button>
+  <button role="menuitem" data-action="list" data-kind="num"><span class="mi">1.</span>Numérotée</button>
+  <button role="menuitem" data-action="list" data-kind="alpha"><span class="mi">a.</span>Lettres</button>
+  <button role="menuitem" data-action="list" data-kind="roman"><span class="mi">i.</span>Chiffres romains</button>
+  <button role="menuitem" data-action="list" data-kind="outline"><span class="mi">1.a.</span>Plan : 1. a. i.</button>
+  <button role="menuitem" data-action="list" data-kind="legal"><span class="mi">1.1.</span>Numérotation 1.1., 1.2.</button>
+</div>
+
+<input type="file" id="file-input" accept=".txt,.text,.md,text/plain" hidden>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+
+<!-- Tableau -->
+<dialog id="dlg-table" class="dlg dlg-big" aria-labelledby="dlg-table-title">
+  <div class="dlg-head">
+    <h2 id="dlg-table-title">Tableau</h2>
+    <button class="icon-btn" data-close aria-label="Fermer">✕</button>
+  </div>
+  <div class="dlg-tools" id="te-tools">
+    <div class="tgroup">
+      <button class="btn sm" data-te="row-above" title="Insérer une ligne au-dessus">+ Ligne ↑</button>
+      <button class="btn sm" data-te="row-below" title="Insérer une ligne en dessous">+ Ligne ↓</button>
+      <button class="btn sm" data-te="row-del" title="Supprimer la ligne active">− Ligne</button>
+    </div>
+    <div class="tgroup">
+      <button class="btn sm" data-te="col-left" title="Insérer une colonne à gauche">+ Col. ←</button>
+      <button class="btn sm" data-te="col-right" title="Insérer une colonne à droite">+ Col. →</button>
+      <button class="btn sm" data-te="col-del" title="Supprimer la colonne active">− Col.</button>
+    </div>
+    <div class="tgroup">
+      <button class="btn sm" data-te="auto" title="Redimensionner toutes les colonnes selon leur contenu">Ajuster au contenu</button>
+    </div>
+    <div class="tgroup opts">
+      <label>Cadre
+        <select id="te-style">
+          <option value="single">Simple ┌─┐</option>
+          <option value="rounded">Arrondi ╭─╮</option>
+          <option value="double">Double ╔═╗</option>
+          <option value="ascii">ASCII +-+</option>
+        </select>
+      </label>
+      <label>Séparateurs
+        <select id="te-rowlines">
+          <option value="all">Entre toutes les lignes</option>
+          <option value="none">Aucun</option>
+        </select>
+      </label>
+      <label class="chk"><input type="checkbox" id="te-header"> En-tête</label>
+    </div>
+  </div>
+  <div class="te-body">
+    <div class="te-scroll"><table id="te-grid" class="te"></table></div>
+    <div class="te-preview-wrap">
+      <div class="te-preview-title">Aperçu <span id="te-info" class="muted"></span></div>
+      <pre id="te-preview" aria-label="Aperçu du tableau"></pre>
+    </div>
+  </div>
+  <div class="dlg-foot">
+    <span class="hint">Entrée : ligne suivante · Maj+Entrée : saut de ligne dans la cellule · glisser le bord d'une colonne pour la redimensionner</span>
+    <span class="spacer"></span>
+    <button class="btn" data-close>Annuler</button>
+    <button class="btn primary" id="te-ok">Insérer</button>
+  </div>
+</dialog>
+
+<!-- Dessin -->
+<dialog id="dlg-draw" class="dlg dlg-full" aria-labelledby="dlg-draw-title">
+  <div class="dlg-head">
+    <h2 id="dlg-draw-title">Zone de dessin</h2>
+    <span class="spacer"></span>
+    <button class="icon-btn" data-dr="undo" aria-label="Annuler" title="Annuler (Ctrl+Z)"><svg><use href="#i-undo"/></svg></button>
+    <button class="icon-btn" data-dr="redo" aria-label="Rétablir" title="Rétablir (Ctrl+Y)"><svg><use href="#i-redo"/></svg></button>
+    <button class="icon-btn" data-close aria-label="Fermer">✕</button>
+  </div>
+  <div class="dr-tools" id="dr-tools" role="toolbar" aria-label="Outils de dessin">
+    <button class="tool" data-tool="select" title="Sélectionner et déplacer (Alt : copier)">⬚ Sélection</button>
+    <button class="tool" data-tool="pan" title="Faire défiler la zone (tactile)">✥ Main</button>
+    <span class="sep"></span>
+    <button class="tool" data-tool="line" title="Ligne droite">─ Ligne</button>
+    <button class="tool" data-tool="elbow" title="Ligne coudée (connecteur)">┐ Coude</button>
+    <button class="tool" data-tool="rect" title="Rectangle">▭ Rectangle</button>
+    <button class="tool" data-tool="round" title="Rectangle arrondi">▢ Arrondi</button>
+    <button class="tool" data-tool="diamond" title="Losange">◇ Losange</button>
+    <button class="tool" data-tool="text" title="Texte libre">T Texte</button>
+    <span class="sep"></span>
+    <button class="tool" data-tool="box" title="Logigramme : étape (cliquer pour placer, saisir le texte)">▭T Étape</button>
+    <button class="tool" data-tool="terminator" title="Logigramme : début / fin">⬭ Début/fin</button>
+    <button class="tool" data-tool="decision" title="Logigramme : décision">◇T Décision</button>
+    <span class="sep"></span>
+    <button class="tool" data-tool="erase" title="Gomme">⌫ Gomme</button>
+  </div>
+  <div class="dr-opts">
+    <label>Trait
+      <select id="dr-double"><option value="0">Simple</option><option value="1">Double</option></select>
+    </label>
+    <label>Flèche
+      <select id="dr-arrow">
+        <option value="none">Aucune</option>
+        <option value="end">À la fin ►</option>
+        <option value="both">Aux deux bouts ◄ ►</option>
+      </select>
+    </label>
+    <label>Coude
+      <select id="dr-first"><option value="h">Horizontal puis vertical</option><option value="v">Vertical puis horizontal</option></select>
+    </label>
+    <span class="spacer"></span>
+    <span id="dr-selbtns" hidden>
+      <button class="btn sm" data-dr="dup">Dupliquer</button>
+      <button class="btn sm" data-dr="del">Effacer</button>
+    </span>
+  </div>
+  <div class="dr-wrap" id="dr-wrap"><canvas id="dr-canvas" aria-label="Zone de dessin"></canvas></div>
+  <div class="dlg-foot dr-foot">
+    <label class="inline">Grille
+      <input type="number" id="dr-w" min="5" max="400" inputmode="numeric"> ×
+      <input type="number" id="dr-h" min="3" max="300" inputmode="numeric">
+    </label>
+    <span class="zoom">
+      <button class="btn sm" data-dr="zoom-out" aria-label="Zoom arrière">−</button>
+      <button class="btn sm" data-dr="zoom-in" aria-label="Zoom avant">+</button>
+    </span>
+    <label class="chk"><input type="checkbox" id="dr-ascii"> ASCII pur</label>
+    <button class="btn sm" data-dr="clear">Tout effacer</button>
+    <span class="spacer"></span>
+    <span id="dr-pos" class="muted"></span>
+    <button class="btn" data-close>Annuler</button>
+    <button class="btn primary" id="dr-ok">Insérer</button>
+  </div>
+</dialog>
+
+<!-- Saisie de texte -->
+<dialog id="dlg-prompt" class="dlg dlg-small" aria-labelledby="pr-title">
+  <form method="dialog">
+    <h2 id="pr-title">Texte</h2>
+    <textarea id="pr-input" rows="3" spellcheck="false" autocomplete="off"></textarea>
+    <div class="dlg-foot">
+      <button type="button" class="btn sm" id="pr-nl" title="Insérer un saut de ligne">↵ Saut de ligne</button>
+      <span class="spacer"></span>
+      <button class="btn" value="cancel" formnovalidate>Annuler</button>
+      <button class="btn primary" value="ok" id="pr-ok">OK</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Réglages -->
+<dialog id="dlg-settings" class="dlg dlg-small" aria-labelledby="se-title">
+  <form method="dialog">
+    <div class="dlg-head"><h2 id="se-title">Réglages</h2><button class="icon-btn" value="close" aria-label="Fermer">✕</button></div>
+    <div class="form-grid">
+      <label for="se-theme">Thème</label>
+      <select id="se-theme"><option value="auto">Automatique</option><option value="light">Clair</option><option value="dark">Sombre</option></select>
+
+      <label for="se-size">Taille du texte</label>
+      <input type="number" id="se-size" min="9" max="40" inputmode="numeric">
+
+      <label for="se-bullets">Style des puces</label>
+      <select id="se-bullets"><option value="unicode">Unicode • ◦ ▪</option><option value="ascii">ASCII - * +</option></select>
+
+      <label for="se-width">Largeur d'alignement</label>
+      <input type="number" id="se-width" min="0" max="500" placeholder="auto (ligne la plus longue)" inputmode="numeric">
+
+      <label class="chk span2"><input type="checkbox" id="se-justlast"> Justifier aussi la dernière ligne d'un paragraphe</label>
+      <label class="chk span2"><input type="checkbox" id="se-continue"> Entrée prolonge automatiquement les listes</label>
+      <label class="chk span2"><input type="checkbox" id="se-wrap"> Retour à la ligne automatique (casse la mise en page)</label>
+      <label class="chk span2"><input type="checkbox" id="se-autosave"> Garder le texte dans ce navigateur (jamais envoyé au serveur)</label>
+    </div>
+    <div class="dlg-foot">
+      <button type="button" class="btn" id="se-reset">Réinitialiser</button>
+      <span class="spacer"></span>
+      <button class="btn primary" value="close">Fermer</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Aide -->
+<dialog id="dlg-help" class="dlg dlg-small" aria-labelledby="he-title">
+  <form method="dialog">
+    <div class="dlg-head"><h2 id="he-title">Aide</h2><button class="icon-btn" value="close" aria-label="Fermer">✕</button></div>
+    <div class="help">
+      <p><strong>Alignement</strong> : sélectionnez des lignes (ou placez le curseur dans un paragraphe) puis choisissez gauche, centre, droite ou justifié. La référence est la <em>ligne la plus longue</em> du bloc.</p>
+      <p><strong>Listes</strong> : bouton « Listes » pour puces, numéros, lettres, romains ou plans à plusieurs niveaux. <kbd>Tab</kbd> / <kbd>Maj+Tab</kbd> changent de niveau, <kbd>Entrée</kbd> prolonge la liste. Appuyer sur <kbd>Échap</kbd> puis <kbd>Tab</kbd> quitte la zone de texte au clavier.</p>
+      <p><strong>Tableau</strong> : crée un tableau, ou modifie celui où se trouve le curseur. Les colonnes s'adaptent au contenu, ou se redimensionnent à la main.</p>
+      <p><strong>Dessin</strong> : lignes, flèches, formes, texte et éléments de logigramme sur une grille de caractères. Sélectionnez un dessin dans le texte avant de cliquer pour le modifier.</p>
+      <p><strong>Fichiers</strong> : import et export en .txt (UTF-8). Rien n'est envoyé au serveur ; le brouillon reste uniquement dans ce navigateur.</p>
+      <p class="muted">Pour que les cadres restent alignés, collez le résultat dans un champ à police à chasse fixe.</p>
+    </div>
+    <div class="dlg-foot"><span class="spacer"></span><button class="btn primary" value="close">Fermer</button></div>
+  </form>
+</dialog>
+
+<noscript><p style="padding:1rem">Cette application nécessite JavaScript.</p></noscript>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

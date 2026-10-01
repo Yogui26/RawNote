@@ -1,0 +1,12 @@
+{
+  "name": "textbrut",
+  "version": "0.1.0",
+  "description": "Traitement de texte brut en mise en page ASCII : alignement, listes, tableaux, dessins. Webapp statique déployable avec Docker.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "node scripts/dev-server.mjs",
+    "test": "node --test \"test/*.test.js\""
+  }
+}
